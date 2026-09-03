@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Cyber Mobile Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-cyber admin-body">
+
+    <!-- Admin Security Password Lock Overlay (Restricts Customers) -->
+    <div id="adminAuthLock" class="admin-lock-overlay">
+        <div class="lock-card">
+            <i class="fa-solid fa-shield-halved lock-icon"></i>
+            <h2>Admin Panel Access</h2>
+            <p>මෙම පිටුව Admin සඳහා පමණි. කරුණාකර මුරපදය ඇතුළත් කරන්න.</p>
+            <form onsubmit="unlockAdmin(event)">
+                <input type="password" id="adminPassInput" placeholder="Admin Password (Default: admin123)" required>
+                <button type="submit" class="btn btn-accent btn-block mt-10">
+                    <i class="fa-solid fa-key"></i> Unlock Dashboard
+                </button>
+            </form>
+            <div id="lockError" class="error-msg hidden">වැරදි මුරපදයකි! නැවත උත්සාහ කරන්න.</div>
+            <p class="sub-text mt-15"><a href="index.html" style="color: var(--text-muted);">&larr; Return to Storefront</a></p>
+        </div>
+    </div>
+
+    <!-- Admin Header -->
+    <header class="navbar admin-header">
+        <div class="logo-container">
+            <img id="adminNavLogo" src="https://cdn-icons-png.flaticon.com/512/3616/3616856.png" class="brand-logo sm">
+            <h1 class="brand-title"><i class="fa-solid fa-sliders"></i> Admin Control Center</h1>
+        </div>
+        <nav>
+            <button onclick="lockAdminDashboard()" class="btn btn-outline btn-sm"><i class="fa-solid fa-lock"></i> Lock Dashboard</button>
+            <a href="index.html" class="btn btn-primary btn-sm" target="_blank"><i class="fa-solid fa-globe"></i> Storefront</a>
+        </nav>
+    </header>
+
+    <div class="container admin-container">
+        
+        <!-- Notification Alert -->
+        <div id="alertBox" class="alert-box hidden"></div>
+
+        <!-- Section 1: Analytics & Daily Visitor Counter -->
+        <section class="admin-card stats-overview-card">
+            <h2><i class="fa-solid fa-chart-line"></i> Analytics & Visitor Counter (දෛනික පාරිභෝගිකයින්)</h2>
+            <div class="stats-grid">
+                <div class="stat-box primary">
+                    <i class="fa-solid fa-users stat-icon"></i>
+                    <div>
+                        <span>අද පැමිණි පාරිභෝගිකයින් (Today's Visitors):</span>
+                        <strong id="statTodayVisitors">0</strong>
+                    </div>
+                </div>
+                <div class="stat-box accent">
+                    <i class="fa-solid fa-eye stat-icon"></i>
+                    <div>
+                        <span>මුළු පිටු නැරඹුම් (Total Pageviews):</span>
+                        <strong id="statTotalPageviews">0</strong>
+                    </div>
+                </div>
+                <div class="stat-box success">
+                    <i class="fa-solid fa-cash-register stat-icon"></i>
+                    <div>
+                        <span>ලැබුණු මුළු Orders:</span>
+                        <strong id="statTotalOrders">0</strong>
+                    </div>
+                </div>
+                <div class="stat-box warning">
+                    <i class="fa-solid fa-coins stat-icon"></i>
+                    <div>
+                        <span>මුළු උපයාගත් ආදායම:</span>
+                        <strong id="statTotalRevenue">Rs. 0</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Customer Orders Dashboard -->
+        <section class="admin-card orders-section-card">
+            <div class="admin-card-header">
+                <h2><i class="fa-solid fa-boxes-packing"></i> ලැබුණු පාරිභෝගික ඇණවුම් (Customer Orders)</h2>
+                <button onclick="clearOrdersLog()" class="btn btn-danger btn-sm">
+                    <i class="fa-solid fa-trash"></i> සියලුම Orders ඉවත් කරන්න
+                </button>
+            </div>
+
+            <div id="ordersLog" class="orders-list-container">
+                <!-- Orders Rendered Dynamically -->
+            </div>
+        </section>
+
+        <!-- Section 3: Shop Settings & Custom Logo Upload -->
+        <section class="admin-card">
+            <h2><i class="fa-solid fa-gears"></i> වෙළඳසැලේ තොරතුරු සහ Logo එක වෙනස් කිරීම</h2>
+            <form id="settingsForm" onsubmit="saveSettings(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Store Name (වෙළඳසැලේ නම)</label>
+                        <input type="text" id="adminStoreName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Admin Security Password (Dashboard එක සඳහා මුරපදය)</label>
+                        <input type="text" id="adminPasswordSetting" required placeholder="admin123">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-image"></i> Shop Logo Image (URL එකක් හෝ File එකක් ලෙස Upload කරන්න)</label>
+                    <div class="form-row">
+                        <input type="text" id="adminStoreLogoUrl" placeholder="https://... Image link">
+                        <input type="file" id="logoFileInput" accept="image/*" onchange="handleImageUpload(event, 'adminStoreLogoUrl')">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Top Announcement Text (උඩින් යන පණිවිඩය)</label>
+                    <input type="text" id="adminAnnouncement" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Settings Save කරන්න</button>
+            </form>
+        </section>
+
+        <!-- Section 4: Dynamic Multi-Banner Carousel Manager -->
+        <section class="admin-card">
+            <h2><i class="fa-solid fa-images"></i> Hero Slide Banners කළමනාකරණය (Multi Banners)</h2>
+            <p class="sub-text">වෙබ් අඩවියේ උඩින්ම පෙනෙන Slide Banners අවශ්‍ය තරම් එකතු කරන්න හෝ ඉවත් කරන්න.</p>
+            
+            <form onsubmit="handleAddBanner(event)" class="mt-15">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Banner Title (මාතෘකාව)</label>
+                        <input type="text" id="bannerTitle" placeholder="උදා: iPhone 15 Mega Offer" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Banner Subtitle / Description</label>
+                        <input type="text" id="bannerSubtitle" placeholder="උදා: 20% Discount with warranty" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Banner Image (Image URL / Local Upload)</label>
+                    <div class="form-row">
+                        <input type="text" id="bannerImgUrl" placeholder="https://... Image URL" required>
+                        <input type="file" accept="image/*" onchange="handleImageUpload(event, 'bannerImgUrl')">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-accent"><i class="fa-solid fa-plus"></i> නව Banner එකක් එකතු කරන්න</button>
+            </form>
+
+            <hr class="section-divider">
+            <h3>දැනට පවතින Banners</h3>
+            <div id="adminBannerList" class="banner-admin-grid"></div>
+        </section>
+
+        <!-- Section 5: Manage Categories & Add Product -->
+        <section class="admin-card">
+            <h2><i class="fa-solid fa-plus-circle"></i> අලුත් Mobile / Accessories එකතු කිරීම</h2>
+            <form id="addProductForm" onsubmit="handleAddProduct(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>භාණ්ඩයේ නම (Product Title) *</label>
+                        <input type="text" id="prodTitle" required placeholder="උදා: iPhone 15 Pro, Fast Charger...">
+                    </div>
+                    <div class="form-group">
+                        <label>කාණ්ඩය (Category) *</label>
+                        <select id="prodCategory" required class="form-control"></select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>මිල / Price (Rs.) *</label>
+                        <input type="number" id="prodPrice" required placeholder="2500">
+                    </div>
+                    <div class="form-group">
+                        <label>Product Image (URL / Upload File)</label>
+                        <input type="text" id="prodImageUrl" placeholder="https://... Image link">
+                        <input type="file" accept="image/*" onchange="handleImageUpload(event, 'prodImageUrl')">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>විස්තරය (Description / Specs)</label>
+                    <textarea id="prodDesc" rows="2" placeholder="RAM, Storage, Warranty, විශේෂාංග..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success"><i class="fa-solid fa-cart-plus"></i> Store එකට එකතු කරන්න</button>
+            </form>
+
+            <hr class="section-divider">
+
+            <h3><i class="fa-solid fa-tags"></i> Categories කළමනාකරණය</h3>
+            <div class="category-manage-box">
+                <div class="form-row">
+                    <input type="text" id="newCatInput" placeholder="අලුත් Category නමක් (උදා: Power Banks)">
+                    <button type="button" class="btn btn-primary" onclick="addNewCategory()">
+                        <i class="fa-solid fa-plus"></i> Add Category
+                    </button>
+                </div>
+                <div id="categoryChips" class="category-chips-list"></div>
+            </div>
+        </section>
+
+        <!-- Section 6: Current Products List -->
+        <section class="admin-card">
+            <h2><i class="fa-solid fa-list-check"></i> දැනට පවතින භාණ්ඩ ලැයිස්තුව</h2>
+            <div id="adminProductList" class="admin-product-table"></div>
+        </section>
+
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initAdminPage();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mobile Store - NextGen Cyber Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-cyber">
+
+    <!-- Top Announcement Bar -->
+    <div class="top-bar" id="topBar">
+        <span id="announcementText">🔥 HOT DEAL: ඕනෑම ස්මාර්ට්ෆෝන් සහ උපාංග සඳහා දිවයින පුරා සුරක්ෂිත ඛෙදාහැරීම!</span>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="logo-container">
+            <div class="shop-logo-wrapper" id="shopLogoWrapper">
+                <img id="shopLogo" src="https://cdn-icons-png.flaticon.com/512/3616/3616856.png" alt="Store Logo" class="brand-logo">
+            </div>
+            <h1 id="storeName" class="brand-title">CYBER MOBILE</h1>
+        </div>
+
+        <nav class="nav-actions">
+            <!-- User Profile / Auth Button -->
+            <div id="authNavArea">
+                <button class="btn btn-auth" onclick="openAuthModal()">
+                    <i class="fa-solid fa-user-astronaut"></i> <span id="navAuthText">Login / Register</span>
+                </button>
+            </div>
+
+            <!-- Shopping Cart Button with Persistent Counter -->
+            <button class="cart-btn" onclick="openCart()">
+                <i class="fa-solid fa-cart-shopping"></i> Cart 
+                <span id="cartCount" class="badge-count">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Dynamic Hero Banner Slider (Multi Banners) -->
+    <section class="banner-slider-container">
+        <div class="banner-slider" id="bannerSlider">
+            <!-- Dynamic slides rendered via JS -->
+        </div>
+        <button class="slider-control prev-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="slider-control next-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="slider-dots" id="sliderDots"></div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="container" id="products">
+        
+        <!-- Category Filter Section -->
+        <div class="category-section">
+            <h3 class="category-title"><i class="fa-solid fa-layer-group"></i> කාණ්ඩ අනුව තෝරන්න (Categories)</h3>
+            <div class="category-buttons" id="categoryContainer">
+                <!-- Dynamically Generated Category Buttons -->
+            </div>
+        </div>
+
+        <div class="products-header-bar">
+            <h2 class="section-title" id="productsHeading">සියලුම නිෂ්පාදන (All Products)</h2>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search phones, chargers, audio..." oninput="handleSearch()">
+            </div>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <!-- Products loaded dynamically from app.js -->
+        </div>
+    </main>
+
+    <!-- Persistent Floating Cart Drawer Bar (Shows anywhere on site) -->
+    <div class="persistent-cart-bar hidden" id="persistentCartBar">
+        <div class="p-cart-info">
+            <i class="fa-solid fa-shopping-bag"></i>
+            <span>ඔබගේ Cart එකේ භාණ්ඩ <strong id="pCartItemCount">0</strong> ක් ඇත!</span>
+            <span class="p-cart-total">Total: Rs. <strong id="pCartTotal">0.00</strong></span>
+        </div>
+        <button class="btn btn-accent btn-sm" onclick="openCart()">Cart එක බලන්න & Check Out</button>
+    </div>
+
+    <!-- Customer Support Floating Widget (0729713164) -->
+    <div class="support-widget">
+        <button class="support-trigger" onclick="toggleSupportMenu()" title="Customer Support">
+            <i class="fa-solid fa-headset"></i>
+            <span class="pulse-ring"></span>
+        </button>
+        <div class="support-menu hidden" id="supportMenu">
+            <div class="support-header">
+                <i class="fa-solid fa-headset"></i>
+                <h4>Customer Support 24/7</h4>
+                <button onclick="toggleSupportMenu()" class="close-sm-btn">&times;</button>
+            </div>
+            <div class="support-body">
+                <p>ඔබට අවශ්‍ය ඕනෑම සහායක් සඳහා අප හා සම්බන්ධ වන්න:</p>
+                <a href="tel:0729713164" class="support-link phone-link">
+                    <i class="fa-solid fa-phone-volume"></i> 
+                    <div>
+                        <strong>Call Helpline</strong>
+                        <span>0729713164</span>
+                    </div>
+                </a>
+                <a href="https://wa.me/94729713164?text=Hello%20Cyber%20Mobile%20Support" target="_blank" class="support-link whatsapp-link">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <div>
+                        <strong>WhatsApp Chat</strong>
+                        <span>0729713164</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive AI Assistant Bot Widget -->
+    <div class="ai-bot-widget">
+        <button class="ai-trigger" onclick="toggleAIChat()" title="AI Assistant">
+            <i class="fa-solid fa-robot"></i>
+            <span class="ai-badge">AI</span>
+        </button>
+        <div class="ai-chat-window hidden" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <div class="ai-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div>
+                    <h4>Cyber Mobile AI Assistant</h4>
+                    <span class="online-status">● Online</span>
+                </div>
+                <button onclick="toggleAIChat()" class="close-sm-btn">&times;</button>
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-msg bot">
+                    👋 ආයුබෝවන්! මම Cyber Mobile AI සහායකයා. ඔබට අවශ්‍ය Phone Specs, Discounts, හෝ Support ගැන මගෙන් විමසන්න.
+                </div>
+            </div>
+            <div class="ai-chat-input">
+                <input type="text" id="aiInput" placeholder="Ask AI something..." onkeypress="handleAIPress(event)">
+                <button onclick="sendAIMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Auth / Login & Register Modal (Google, FB, VK) -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-content auth-modal">
+            <button class="close-btn" onclick="closeAuthModal()">&times;</button>
+            <div class="auth-header">
+                <i class="fa-solid fa-user-shield auth-icon"></i>
+                <h3>Sign In / Create Account</h3>
+                <p>ඔබගේ Account එකට පිවිසෙන්න හෝ නව Account එකක් සාදාගන්න</p>
+            </div>
+
+            <!-- Social Auth Options -->
+            <div class="social-login-grid">
+                <button class="social-btn google-btn" onclick="mockSocialLogin('Google')">
+                    <i class="fa-brands fa-google"></i> Continue with Google
+                </button>
+                <button class="social-btn facebook-btn" onclick="mockSocialLogin('Facebook')">
+                    <i class="fa-brands fa-facebook-f"></i> Continue with Facebook
+                </button>
+                <button class="social-btn vk-btn" onclick="mockSocialLogin('VKontakte (VK)')">
+                    <i class="fa-brands fa-vk"></i> Continue with VK
+                </button>
+            </div>
+
+            <div class="divider"><span>OR</span></div>
+
+            <!-- Traditional Auth Form -->
+            <form onsubmit="handleEmailAuth(event)" class="auth-form">
+                <div class="form-group">
+                    <label>Email / Phone</label>
+                    <input type="text" id="authEmail" placeholder="user@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login / Register
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-content cart-modal">
+            <button class="close-btn" onclick="closeCart()">&times;</button>
+            <h3><i class="fa-solid fa-basket-shopping"></i> Shopping Cart</h3>
+            
+            <div id="cartItems" class="cart-items-container">
+                <!-- Cart Items Rendered Here -->
+            </div>
+
+            <div class="cart-summary">
+                <h4>එකතුව (Total): Rs. <span id="cartTotal">0.00</span></h4>
+            </div>
+
+            <!-- Customer Checkout Form -->
+            <form id="checkoutForm" onsubmit="handleCheckout(event)" class="checkout-form">
+                <h4><i class="fa-solid fa-address-card"></i> ඔබගේ බෙදාහැරීම් විස්තර</h4>
+                
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user"></i> සම්පූර්ණ නම (Full Name) *</label>
+                    <input type="text" id="custName" placeholder="උදා: කසුන් පෙරේරා" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-phone"></i> දුරකථන අංකය *</label>
+                        <input type="tel" id="custPhone" placeholder="07XXXXXXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-city"></i> ලඟම නගරය *</label>
+                        <input type="text" id="custCity" placeholder="කොළඹ, ගම්පහ..." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-location-dot"></i> බෙදාහැරිය යුතු ලිපිනය *</label>
+                    <textarea id="custAddress" rows="2" placeholder="නිවසේ අංකය, වීදිය..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-note-sticky"></i> අමතර සටහන් (Color, Storage...)</label>
+                    <input type="text" id="orderNotes" placeholder="උදා: Titanium Gray, 256GB">
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block glowing-btn">
+                    <i class="fa-solid fa-check-circle"></i> ඇණවුම් කරන්න (Place Order Direct)
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Success Confirmation Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content success-modal">
+            <div class="success-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2>ඇණවුම සාර්ථකයි!</h2>
+            <p id="successMsg">ඔබගේ ඇණවුම සාර්ථකව Admin Panel එකට යොමු කෙරිණි.</p>
+            <div class="order-id-badge" id="successOrderId">Order ID: ORD-000000</div>
+            <p class="sub-text">අපගේ සේවා නියෝජිතයෙකු කෙටි වේලාවකින් 0729713164 හරහා ඔබ හා සම්බන්ධ වනු ඇත.</p>
+            <button class="btn btn-primary btn-block" onclick="closeSuccessModal()">ස්තූතියි (Close)</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3 id="footerStoreName">CYBER MOBILE</h3>
+                <p>ශ්‍රී ලංකාවේ විශ්වාසවන්තම නියම තත්වයේ ජංගම දුරකථන සහ උපාංග අලෙවිසැල.</p>
+            </div>
+            <div class="footer-support">
+                <h4>Hotline & Support</h4>
+                <p><i class="fa-solid fa-phone"></i> 0729713164</p>
+                <p><i class="fa-brands fa-whatsapp"></i> 0729713164</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="year"></span> Cyber Mobile Store. All Rights Reserved.</p>
+            <p><a href="admin.html" target="_blank" class="admin-portal-link"><i class="fa-solid fa-lock"></i> Admin Portal (Protected)</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
