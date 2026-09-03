@@ -1,5 +1,5 @@
 ========================================================================
-CYBER MOBILE STORE - NEXTGEN ONLINE STORE & ADMIN MANAGEMENT SYSTEM
+NCL SOLUTIONS - NEXTGEN ONLINE STORE & ADMIN MANAGEMENT SYSTEM
 ========================================================================
 
 ඔබගේ සියලුම නවතම ඉල්ලීම් සපුරාලමින් සකස් කරන ලද සම්පූර්ණ වෙබ් අඩවිය:
